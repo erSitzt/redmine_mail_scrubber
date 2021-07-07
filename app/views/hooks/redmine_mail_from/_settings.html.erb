@@ -1,0 +1,112 @@
+<style>
+#settings_mail_from {
+  display: none;
+}
+
+#mail-from-list {
+}
+
+.mail-from-item {
+  display: block;
+}
+
+.mail-from-val {
+  margin-right: .5em;
+}
+
+span.mail-from-handle,
+a.mail-from-edit,
+a.mail-from-delete {
+  opacity: 0.4;
+}
+
+span.mail-from-handle:hover,
+a.mail-from-edit:hover,
+a.mail-from-delete:hover {
+  opacity: 1;
+}
+
+#mail-from-add {
+  display: block;
+  padding-top: .25em;
+}
+</style>
+
+<script type="text/javascript">
+$(function() {
+  var input = function(val) {
+    var text = '<%= l(:setting_mail_from) %>\n' +
+        '(%f: <%= l(:field_firstname) %>, %l: <%= l(:field_lastname) %>, %m: <%= l(:field_mail) %>, %u: <%= l(:field_login) %>)';
+
+    return window.prompt(text, val);
+  };
+
+  var append = function(val) {
+    var content = '<span class="mail-from-item">' +
+        '<input type="checkbox" checked disabled>' +
+        '<span class="mail-from-val">' +
+        $('<span>').text(val).html() +
+        '</span>' + ' ' +
+        '<span class="sort-handle mail-from-handle"></span>' + ' ' +
+        '<a class="icon-only icon-edit mail-from-edit" href="javascript:void(0)"></a>' + ' ' +
+        '<a class="icon-only icon-del mail-from-delete" href="javascript:void(0)"></a>' +
+        '</span>';
+
+    $('#mail-from-list').append(content);
+  };
+
+  var update = function() {
+    var item = [];
+
+    $('#mail-from-list span.mail-from-val').each(function(index) {
+      item.push($(this).text());
+    });
+
+    $('#settings_mail_from').val(item.join(' :: '));
+  };
+
+  var mailFromContent = '<span id="mail-from-list"></span>' +
+      '<span id="mail-from-add">' +
+      '<a class="icon icon-add" href="javascript:void(0)">' +
+      '<%= l(:label_email_address_add) %>' +
+      '</a></span>' +
+      '<em class="info">%f: <%= l(:field_firstname) %>,&ensp;%l: <%= l(:field_lastname) %>,&ensp;%m: <%= l(:field_mail) %>,&ensp;%u: <%= l(:field_login) %></em>';
+
+  $('#settings_mail_from').after(mailFromContent);
+
+  $('#settings_mail_from').val().split(/\s*::\s*/).forEach(function(val) {
+    if (val) append(val);
+  });
+
+  $('#mail-from-add a').on('click', function() {
+    var val = input('');
+
+    if (val) {
+      append(val);
+      update();
+    }
+  });
+
+  $('#mail-from-list').on('click', 'a.mail-from-edit', function(e) {
+    var item = $(e.currentTarget).parent().children('span.mail-from-val');
+
+    var val = input(item.text());
+
+    if (val) {
+      item.text(val);
+      update();
+    }
+  });
+
+  $('#mail-from-list').on('click', 'a.mail-from-delete', function(e) {
+    $(e.currentTarget).parent().remove();
+    update();
+  });
+
+  $('#mail-from-list').sortable({
+    axis: 'y',
+    handle: '.mail-from-handle',
+    update: update
+  });
+});
+</script>
