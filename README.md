@@ -1,3 +1,10 @@
+# Redmine Mail Scrubber
+
+This plugin is intended to remove all Redmine specific information ( subject / issue-id / mail-headers ) to allow processing in other Redmine-Instances without causing trouble with existing Issues.
+
+This is based on the "Redmine Mail From" plugin by Takeshi Nakamura ( https://github.com/taqueci/redmine_mail_from )
+
+
 # Redmine Mail From plugin
 
 This plugin adds user name and/or mail address to the "From:" header field of the notification mail.
